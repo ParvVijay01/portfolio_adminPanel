@@ -42,6 +42,18 @@ class CategorySubmitForm extends StatelessWidget {
                   return null;
                 },
               ),
+              Gap(defaultPadding),
+              CustomTextField(
+                controller: context.categoryProvider.categoryDescController,
+                labelText: 'Description',
+                onSave: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a category description';
+                  }
+                  return null;
+                },
+              ),
               Gap(defaultPadding * 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,4 @@
 import 'package:admin_panel/features/categories/components/add_category_form.dart';
-import 'package:admin_panel/features/categories/components/category_header.dart';
 import 'package:admin_panel/features/categories/components/category_list_section.dart';
 import 'package:admin_panel/utility/constants.dart';
 import 'package:admin_panel/utility/extensions.dart';
@@ -31,7 +30,7 @@ class CategoryScreen extends StatelessWidget {
                           Expanded(
                             child: Text(
                               "My Categories",
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ),
                           ElevatedButton.icon(
@@ -44,8 +43,14 @@ class CategoryScreen extends StatelessWidget {
                             onPressed: () {
                               showAddCategoryForm(context, null);
                             },
-                            icon: Icon(Icons.add),
-                            label: Text("Add New"),
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              "Add New",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                           Gap(20),
                           IconButton(

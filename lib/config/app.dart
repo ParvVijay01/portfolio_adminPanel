@@ -4,6 +4,7 @@ import 'package:admin_panel/features/categories/screen/category_screen.dart';
 import 'package:admin_panel/theme/color_scheme.dart';
 import 'package:admin_panel/utility/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart'; // Import Provider
 
 class MyApp extends StatelessWidget {
@@ -17,10 +18,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => CategoryProvider(context.dataProvider)),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'Portfolio Admin Panel',
         theme: lightMode,
-        home: CategoryScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const CategoryScreen(),
+          // '/photos': (context) => const PhotoScreen(),
+        },
       ),
     );
   }

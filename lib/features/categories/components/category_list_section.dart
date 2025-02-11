@@ -8,8 +8,8 @@ import 'add_category_form.dart';
 
 class CategoryListSection extends StatelessWidget {
   const CategoryListSection({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +35,44 @@ class CategoryListSection extends StatelessWidget {
                   // minWidth: 600,
                   columns: [
                     DataColumn(
-                      label: Text("Category Name"),
+                      label: Text(
+                        "Category Name",
+                        style: TextStyle(
+                          color: Color(0xFFFBFFE4),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     DataColumn(
-                      label: Text("Added Date"),
+                      label: Text(
+                        "Description",
+                        style: TextStyle(
+                          color: Color(0xFFFBFFE4),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     DataColumn(
-                      label: Text("Edit"),
+                      label: Text(
+                        "Edit",
+                        style: TextStyle(
+                          color: Color(0xFFFBFFE4),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     DataColumn(
-                      label: Text("Delete"),
+                      label: Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Color(0xFFFBFFE4),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ],
                   rows: List.generate(
@@ -74,18 +102,32 @@ DataRow categoryDataRow(Category CatInfo, {Function? edit, Function? delete}) {
       DataCell(
         Row(
           children: [
-            Image.network(
-              CatInfo.file ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(CatInfo.name ?? ''),
+              child: Text(
+                CatInfo.name ?? '',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color(0xFFFBFFE4),
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      DataCell(
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: Text(
+                CatInfo.description ?? '',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Color(0xFFFBFFE4),
+                    fontWeight: FontWeight.w300),
+              ),
             ),
           ],
         ),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
-    primary: Color(0xFF4B5945),
-    surface: Color(0xFF66785F),
-    secondary: Color(0xFF91AC8F),
-    tertiary: Color(0xFFB2C9AD),
+    primary: Color(0xFF3674B5),
+    surface: Color(0xFF578FCA),
+    secondary: Color(0xFFA1E3F9),
+    tertiary: Color(0xFFD1F8EF),
   ),
   cardColor: Colors.white,
 );

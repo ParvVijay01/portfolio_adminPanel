@@ -12,6 +12,7 @@ class CategoryProvider extends ChangeNotifier {
   final DataProvider _dataProvider;
   final addCategoryFormKey = GlobalKey<FormState>();
   TextEditingController categoryNameCtrl = TextEditingController();
+  TextEditingController categoryDescController = TextEditingController();
   Category? categoryForUpdate;
 
   CategoryProvider(this._dataProvider);
@@ -21,15 +22,16 @@ class CategoryProvider extends ChangeNotifier {
     try {
       Map<String, dynamic> formDataMap = {
         'name': categoryNameCtrl.text,
+        'description': categoryDescController.text,
       };
 
       final response = await service.addItem(
           endpointUrl: 'api/categories', itemData: formDataMap);
-      print("Body ==> ${response.isOk}");
+      print("added Body ==> ${response.body}");
 
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-        log("Apir response ====> $apiResponse");
+        log("Api response ====> $apiResponse");
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar("${apiResponse.message}");
@@ -41,7 +43,7 @@ class CategoryProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            "Error ${response.body?['message'] ?? response.statusText}");
+            "Error ${response.body?['message ==>'] ?? response.statusText}");
       }
     } catch (err) {
       print("Error in adding category ==> $err");
@@ -55,13 +57,14 @@ class CategoryProvider extends ChangeNotifier {
     try {
       Map<String, dynamic> formDataMap = {
         'name': categoryNameCtrl.text,
+        'description': categoryDescController.text,
       };
 
       final response = await service.updateItem(
           endpointUrl: 'api/categories',
           itemId: categoryForUpdate?.sId ?? '',
           itemData: formDataMap);
-
+      log('update body ====> ${response.body}');
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
@@ -75,7 +78,7 @@ class CategoryProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            'Error ${response.body?['message'] ?? response.statusText}');
+            'Error in updating category ==> ${response.body?['message'] ?? response.statusText}');
       }
     } catch (err) {
       print(err);
@@ -98,7 +101,9 @@ class CategoryProvider extends ChangeNotifier {
     try {
       Response response = await service.deleteItem(
           endpointUrl: 'api/categories', itemId: category.sId ?? '');
+      log('body===> ${response.body}');
       if (response.isOk) {
+        log('${response.isOk}');
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           SnackBarHelper.showSuccessSnackBar('Category deleted successfully');
@@ -106,7 +111,7 @@ class CategoryProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            ('Error ${response.body?['message'] ?? response.statusText}'));
+            ('Error ${response.body?['message ===> '] ?? response.statusText}'));
       }
     } catch (err) {
       print(err);
@@ -120,6 +125,7 @@ class CategoryProvider extends ChangeNotifier {
       clearFields();
       categoryForUpdate = category;
       categoryNameCtrl.text = category.name ?? '';
+      categoryDescController.text = category.description ?? '';
     } else {
       clearFields();
     }
@@ -128,6 +134,7 @@ class CategoryProvider extends ChangeNotifier {
   /// Clear Fields After Submit
   clearFields() {
     categoryNameCtrl.clear();
+    categoryDescController.clear();
     categoryForUpdate = null;
   }
 }
