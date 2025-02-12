@@ -5,7 +5,6 @@ class Photo {
   final String title;
   final String image;
   final String description;
-  final String createdAt;
   final Category category;
 
   Photo({
@@ -13,7 +12,6 @@ class Photo {
     required this.title,
     required this.image,
     required this.description,
-    required this.createdAt,
     required this.category,
   });
 
@@ -23,9 +21,7 @@ class Photo {
       title: json["title"],
       image: json["image"], // API returns path, so handle full URL in UI
       description: json["description"],
-      createdAt: json["createdAt"],
       category: Category.fromJson(json["category"]),
     );
   }
 }
-
