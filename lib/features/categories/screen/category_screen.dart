@@ -35,6 +35,8 @@ class CategoryScreen extends StatelessWidget {
                           ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
+                              elevation: 2,
+                              side: BorderSide(color: Colors.black26),
                               padding: EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
                                 vertical: defaultPadding,

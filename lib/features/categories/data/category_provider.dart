@@ -27,14 +27,18 @@ class CategoryProvider extends ChangeNotifier {
 
       final response = await service.addItem(
           endpointUrl: 'api/categories', itemData: formDataMap);
-      print("added Body ==> ${response.body}");
+      log("added Body ==> ${response.body}");
 
       if (response.isOk) {
-        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        ApiResponse<Category> apiResponse = ApiResponse.fromJson(
+          response.body,
+          (json) => Category.fromJson(json as Map<String, dynamic>),
+        );
         log("Api response ====> $apiResponse");
+
         if (apiResponse.success == true) {
           clearFields();
-          SnackBarHelper.showSuccessSnackBar("${apiResponse.message}");
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
           _dataProvider.getAllCategory();
           log("Category added");
         } else {
@@ -43,11 +47,11 @@ class CategoryProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            "Error ${response.body?['message ==>'] ?? response.statusText}");
+            "Error ${response.body?['message'] ?? response.statusText}");
       }
     } catch (err) {
-      print("Error in adding category ==> $err");
-      SnackBarHelper.showErrorSnackBar("An error occurred : ${err}");
+      log("Error in adding category ==> $err");
+      SnackBarHelper.showErrorSnackBar("An error occurred: $err");
       rethrow;
     }
   }
@@ -69,7 +73,7 @@ class CategoryProvider extends ChangeNotifier {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           clearFields();
-          SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
           log('Category updated');
           _dataProvider.getAllCategory();
         } else {
@@ -81,7 +85,7 @@ class CategoryProvider extends ChangeNotifier {
             'Error in updating category ==> ${response.body?['message'] ?? response.statusText}');
       }
     } catch (err) {
-      print(err);
+      log('$err');
       SnackBarHelper.showErrorSnackBar('An error occurred: $err');
       rethrow;
     }
@@ -114,7 +118,7 @@ class CategoryProvider extends ChangeNotifier {
             ('Error ${response.body?['message ===> '] ?? response.statusText}'));
       }
     } catch (err) {
-      print(err);
+      log('$err');
       rethrow;
     }
   }

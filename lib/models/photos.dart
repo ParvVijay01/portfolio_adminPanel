@@ -1,38 +1,31 @@
-class Photos {
-  String? sId;
-  String? title;
-  String? description;
-  ProRef? categoryId;
-  String? image;
+import 'package:admin_panel/models/category.dart';
 
-  Photos({this.sId, this.title, this.description, this.categoryId, this.image});
+class Photo {
+  final String id;
+  final String title;
+  final String image;
+  final String description;
+  final String createdAt;
+  final Category category;
 
-  Photos.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    title = json['title'];
-    description = json['description'];
-    image = json['image'];
-    categoryId = json['categoryId'] != null
-        ? ProRef.fromJson(json['categoryId'])
-        : null;
+  Photo({
+    required this.id,
+    required this.title,
+    required this.image,
+    required this.description,
+    required this.createdAt,
+    required this.category,
+  });
+
+  factory Photo.fromJson(Map<String, dynamic> json) {
+    return Photo(
+      id: json["_id"],
+      title: json["title"],
+      image: json["image"], // API returns path, so handle full URL in UI
+      description: json["description"],
+      createdAt: json["createdAt"],
+      category: Category.fromJson(json["category"]),
+    );
   }
 }
 
-class ProRef {
-  String? sId;
-  String? name;
-
-  ProRef({this.sId, this.name});
-
-  ProRef.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['name'] = name;
-    return data;
-  }
-}

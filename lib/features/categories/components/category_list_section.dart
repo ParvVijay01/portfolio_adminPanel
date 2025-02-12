@@ -22,10 +22,6 @@ class CategoryListSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "All Categories",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
           SizedBox(
             width: double.infinity,
             child: Consumer<DataProvider>(
@@ -39,7 +35,7 @@ class CategoryListSection extends StatelessWidget {
                         "Category Name",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -49,7 +45,7 @@ class CategoryListSection extends StatelessWidget {
                         "Description",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -59,7 +55,7 @@ class CategoryListSection extends StatelessWidget {
                         "Edit",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -69,7 +65,7 @@ class CategoryListSection extends StatelessWidget {
                         "Delete",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -107,7 +103,7 @@ DataRow categoryDataRow(Category CatInfo, {Function? edit, Function? delete}) {
               child: Text(
                 CatInfo.name ?? '',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 15,
                   color: Color(0xFFFBFFE4),
                   fontWeight: FontWeight.w300,
                 ),
@@ -124,7 +120,7 @@ DataRow categoryDataRow(Category CatInfo, {Function? edit, Function? delete}) {
               child: Text(
                 CatInfo.description ?? '',
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 15,
                     color: Color(0xFFFBFFE4),
                     fontWeight: FontWeight.w300),
               ),

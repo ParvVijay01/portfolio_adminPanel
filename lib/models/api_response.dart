@@ -6,12 +6,15 @@ class ApiResponse<T> {
   ApiResponse({required this.success, required this.message, this.data});
 
   factory ApiResponse.fromJson(
-    Map<String, dynamic> json,
-    T Function(Object? json)? fromJsonT,
-  ) =>
-      ApiResponse(
-        success: json['success'] as bool,
-        message: json['message'] as String,
-        data: json['data'] != null ? fromJsonT!(json['data']) : null,
-      );
+  Map<String, dynamic> json,
+  T Function(Object? json)? fromJsonT, // `fromJsonT` can be null
+) =>
+    ApiResponse(
+      success: json['success'] as bool? ?? false, // Default to false if null
+      message: json['message'] as String? ?? "Unknown error",
+      data: json['data'] != null && fromJsonT != null
+          ? fromJsonT(json['data']) // Only call `fromJsonT` if it exists
+          : null, // Otherwise, return null
+    );
+
 }

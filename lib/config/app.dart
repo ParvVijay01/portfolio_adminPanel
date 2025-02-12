@@ -1,6 +1,8 @@
 import 'package:admin_panel/core/data_provider.dart';
 import 'package:admin_panel/features/categories/data/category_provider.dart';
-import 'package:admin_panel/features/categories/screen/category_screen.dart';
+import 'package:admin_panel/features/main/screen/main_screen.dart';
+import 'package:admin_panel/features/main/provider/main_screen_provider.dart';
+import 'package:admin_panel/routes/app_pages.dart';
 import 'package:admin_panel/theme/color_scheme.dart';
 import 'package:admin_panel/utility/extensions.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +17,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(create: (context) => MainScreenProvider()),
         ChangeNotifierProvider(
             create: (context) => CategoryProvider(context.dataProvider)),
       ],
       child: GetMaterialApp(
         title: 'Portfolio Admin Panel',
         theme: lightMode,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const CategoryScreen(),
-          // '/photos': (context) => const PhotoScreen(),
-        },
+        initialRoute: AppPages.HOME,
+        unknownRoute: GetPage(name: '/notFound', page: () => MainScreen()),
+        defaultTransition: Transition.cupertino,
+        getPages: AppPages.routes,
       ),
     );
   }
