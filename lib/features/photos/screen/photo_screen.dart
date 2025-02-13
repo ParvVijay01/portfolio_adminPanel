@@ -1,5 +1,6 @@
 import 'package:admin_panel/features/categories/components/add_category_form.dart';
 import 'package:admin_panel/features/categories/components/category_list_section.dart';
+import 'package:admin_panel/features/photos/components/photo_list_section.dart';
 import 'package:admin_panel/utility/constants.dart';
 import 'package:admin_panel/utility/extensions.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                         ],
                       ),
                       Gap(defaultPadding),
-                      CategoryListSection(),
+                      PhotoListSection(),
                     ],
                   ),
                 ),

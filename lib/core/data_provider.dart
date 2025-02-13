@@ -12,10 +12,11 @@ class DataProvider extends ChangeNotifier {
   List<Category> _allCategories = [];
   List<Photo> _allPhotos = [];
   List<Category> get categories => _allCategories;
+  List<Photo> get photos => _allPhotos;
 
   DataProvider() {
     getAllCategory();
-    // getAllphotos();
+    getAllPhotos();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -50,29 +51,27 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<List<Photo>> getAllPhotos({bool showSnack = false}) async {
-  try {
-    Response response = await service.getItems(endpointUrl: 'api/photos');
-    if (response.isOk) {
-      if (response.body is List) {
-        _allPhotos = (response.body as List)
-            .map((item) => Photo.fromJson(item))
-            .toList();
-        notifyListeners();
-        if (showSnack) {
-          SnackBarHelper.showSuccessSnackBar("Photos fetched successfully!");
+    try {
+      Response response = await service.getItems(endpointUrl: 'api/photos');
+      if (response.isOk) {
+        if (response.body is List) {
+          _allPhotos = (response.body as List)
+              .map((item) => Photo.fromJson(item))
+              .toList();
+          notifyListeners();
+          if (showSnack) {
+            SnackBarHelper.showSuccessSnackBar("Photos fetched successfully!");
+          }
+        } else {
+          throw Exception("Unexpected response format: ${response.body}");
         }
-      } else {
-        throw Exception("Unexpected response format: ${response.body}");
       }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
     }
-  } catch (e) {
-    if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
-    rethrow;
+    return _allPhotos;
   }
-  return _allPhotos;
-}
-
-
 
   // Future<List<Photos>> getAllphotos({bool showSnack = false}) async {
   //   try {

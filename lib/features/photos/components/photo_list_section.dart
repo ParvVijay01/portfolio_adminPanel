@@ -1,6 +1,5 @@
 import 'package:admin_panel/core/data_provider.dart';
 import 'package:admin_panel/features/categories/components/add_category_form.dart';
-import 'package:admin_panel/features/categories/components/category_list_section.dart';
 import 'package:admin_panel/models/category.dart';
 import 'package:admin_panel/models/photos.dart';
 import 'package:admin_panel/utility/constants.dart';
@@ -32,7 +31,17 @@ class PhotoListSection extends StatelessWidget {
                   columns: [
                     DataColumn(
                       label: Text(
-                        "Category Name",
+                        "Title",
+                        style: TextStyle(
+                          color: Color(0xFFFBFFE4),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        "Category",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
                           fontSize: 20,
@@ -72,11 +81,11 @@ class PhotoListSection extends StatelessWidget {
                     ),
                   ],
                   rows: List.generate(
-                    dataProvider.categories.length,
-                    (index) => categoryDataRow(dataProvider.categories[index],
-                        delete: () {
-                      context.categoryProvider
-                          .deleteCategory(dataProvider.categories[index]);
+                    dataProvider.photos.length,
+                    (index) => photoDataRow(dataProvider.photos[index],
+                        dataProvider.categories[index], delete: () {
+                      context.photoProvider
+                          .deletePhoto(dataProvider.photos[index]);
                     }, edit: () {
                       showAddCategoryForm(
                           context, dataProvider.categories[index]);

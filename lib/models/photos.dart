@@ -1,14 +1,14 @@
 import 'package:admin_panel/models/category.dart';
 
 class Photo {
-  final String id;
+  final String sId;
   final String title;
   final String image;
   final String description;
   final Category category;
 
   Photo({
-    required this.id,
+    required this.sId,
     required this.title,
     required this.image,
     required this.description,
@@ -17,7 +17,7 @@ class Photo {
 
   factory Photo.fromJson(Map<String, dynamic> json) {
     return Photo(
-      id: json["_id"],
+      sId: json["_id"],
       title: json["title"],
       image: json["image"], // API returns path, so handle full URL in UI
       description: json["description"],
