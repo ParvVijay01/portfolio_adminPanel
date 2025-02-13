@@ -1,5 +1,5 @@
 import 'package:admin_panel/core/data_provider.dart';
-import 'package:admin_panel/features/categories/components/add_category_form.dart';
+import 'package:admin_panel/features/photos/components/add_photos_form.dart';
 import 'package:admin_panel/models/category.dart';
 import 'package:admin_panel/models/photos.dart';
 import 'package:admin_panel/utility/constants.dart';
@@ -87,8 +87,7 @@ class PhotoListSection extends StatelessWidget {
                       context.photoProvider
                           .deletePhoto(dataProvider.photos[index]);
                     }, edit: () {
-                      showAddCategoryForm(
-                          context, dataProvider.categories[index]);
+                      showAddPhotoForm(context, null);
                     }),
                   ),
                 );
@@ -143,7 +142,7 @@ DataRow photoDataRow(Photo photoInfo, Category category,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
             child: Text(
-              category.name ?? '',
+              photoInfo.description,
               style: TextStyle(
                   fontSize: 15,
                   color: Color(0xFFFBFFE4),

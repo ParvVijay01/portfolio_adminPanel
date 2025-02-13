@@ -1,5 +1,4 @@
-import 'package:admin_panel/features/categories/components/add_category_form.dart';
-import 'package:admin_panel/features/categories/components/category_list_section.dart';
+import 'package:admin_panel/features/photos/components/add_photos_form.dart';
 import 'package:admin_panel/features/photos/components/photo_list_section.dart';
 import 'package:admin_panel/utility/constants.dart';
 import 'package:admin_panel/utility/extensions.dart';
@@ -49,7 +48,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                               ),
                             ),
                             onPressed: () {
-                              showAddCategoryForm(context, null);
+                              showAddPhotoForm(context, null);
                             },
                             icon: Icon(
                               Icons.add,
