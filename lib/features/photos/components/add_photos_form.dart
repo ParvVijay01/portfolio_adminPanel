@@ -1,91 +1,131 @@
 import 'package:admin_panel/features/photos/data/photo_provider.dart';
-import 'package:admin_panel/models/photos.dart';
-import 'package:admin_panel/utility/constants.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:admin_panel/models/category.dart';
-import 'package:admin_panel/utility/extensions.dart';
+import 'package:admin_panel/models/photos.dart';
+import 'package:admin_panel/widgets/custom_dropdown.dart';
+import 'package:admin_panel/widgets/image_card.dart';
 
-class AddPhotoForm extends StatelessWidget {
-  const AddPhotoForm({super.key});
+import '../../../utility/extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
+import '../../../utility/constants.dart';
+import '../../../widgets/custom_text_field.dart';
+
+class PhotoSubmitForm extends StatelessWidget {
+  final Photo? photo;
+
+  const PhotoSubmitForm({super.key, this.photo});
 
   @override
   Widget build(BuildContext context) {
-    final photoProvider = context.watch<PhotoProvider>(); // **Watch for changes**
-
-    return AlertDialog(
-      title: Text("Add Photo"),
-      content: SingleChildScrollView(
-        child: Form(
-          key: photoProvider.addPhotoFormKey,
+    var size = MediaQuery.of(context).size;
+    context.photoProvider.setDataForUpdatePhoto(photo);
+    return SingleChildScrollView(
+      child: Form(
+        key: context.photoProvider.addPhotoFormKey,
+        child: Container(
+          padding: EdgeInsets.all(defaultPadding),
+          width: size.width * 0.3,
+          height: size.height,
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// Title Input
-              TextFormField(
-                controller: photoProvider.photoNameCtrl,
-                decoration: InputDecoration(labelText: "Photo Title"),
-                validator: (value) =>
-                    value!.isEmpty ? "Please enter a title" : null,
-              ),
-
-              /// Description Input
-              TextFormField(
-                controller: photoProvider.photoDescCtrl,
-                decoration: InputDecoration(labelText: "Description"),
-                validator: (value) =>
-                    value!.isEmpty ? "Please enter a description" : null,
-              ),
-
-              /// Category Dropdown
-              FutureBuilder<List<Category>>(
-                future: context.dataProvider.getAllCategory(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-                  List<Category> categories = snapshot.data!;
-                  return DropdownButtonFormField<String>(
-                    // value: photoProvider.selectedCategoryBytes,
-                    decoration: InputDecoration(labelText: "Select Category"),
-                    items: categories.map((category) {
-                      return DropdownMenuItem<String>(
-                        value: category.sId,
-                        child: Text(category.name ?? ''),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      photoProvider.setSelectedCategory(value);
+              Gap(defaultPadding),
+              Consumer<PhotoProvider>(
+                builder: (context, imgProvider, child) {
+                  return ImageCard(
+                    labelText: "Image",
+                    imageFile: imgProvider.selectedImage,
+                    imageUrlForUpdateImage: photo?.image,
+                    onTap: () {
+                      imgProvider.pickImage();
                     },
-                    validator: (value) =>
-                        value == null ? "Please select a category" : null,
                   );
                 },
               ),
-              SizedBox(height: 10),
-
-              /// Image Preview
-              photoProvider.selectedImageBytes != null
-                  ? Image.memory(
-                      photoProvider.selectedImageBytes!, height: 150, width: 150)
-                  : Text("No image selected"),
-
-              /// Pick Image Button
-              ElevatedButton(
-                onPressed: () => photoProvider.pickImage(),
-                child: Text("Pick Image"),
-              ),
-
-              SizedBox(height: 10),
-
-              /// Submit Button
-              ElevatedButton(
-                onPressed: () {
-                  if (photoProvider.addPhotoFormKey.currentState!.validate()) {
-                    photoProvider.submitPhoto();
-                  }
+              Gap(defaultPadding),
+              Consumer<PhotoProvider>(
+                builder: (context, imgProvider, child) {
+                  return CustomDropdown(
+                    initialValue: imgProvider.selectedCategory,
+                    hintText:
+                        imgProvider.selectedCategory?.name ?? 'Select category',
+                    items: context.dataProvider.categories,
+                    displayItem: (Category? category) => category?.name ?? '',
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        imgProvider.selectedCategory = newValue;
+                        imgProvider.updateUi();
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select a category';
+                      }
+                      return null;
+                    },
+                  );
                 },
-                child: Text("Submit"),
+              ),
+              CustomTextField(
+                controller: context.photoProvider.photoTitleController,
+                labelText: 'Photo Title',
+                onSave: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a Title';
+                  }
+                  return null;
+                },
+              ),
+              CustomTextField(
+                controller: context.photoProvider.photoDescController,
+                labelText: 'Photo Description',
+                onSave: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a Description';
+                  }
+                  return null;
+                },
+              ),
+              Gap(defaultPadding * 2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: secondaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the popup
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  Gap(defaultPadding),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: primaryColor,
+                    ),
+                    onPressed: () {
+                      // Validate and save the form
+                      if (context.photoProvider.addPhotoFormKey.currentState!
+                          .validate()) {
+                        context.photoProvider.addPhotoFormKey.currentState!
+                            .save();
+                        context.photoProvider.submitPhoto();
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -95,7 +135,7 @@ class AddPhotoForm extends StatelessWidget {
   }
 }
 
-
+// How to show the category popup
 void showAddPhotoForm(BuildContext context, Photo? photo) {
   showDialog(
     context: context,
@@ -103,9 +143,9 @@ void showAddPhotoForm(BuildContext context, Photo? photo) {
       return AlertDialog(
         backgroundColor: bgColor,
         title: Center(
-            child: Text('Add Category'.toUpperCase(),
+            child: Text('Add Photo'.toUpperCase(),
                 style: TextStyle(color: primaryColor))),
-        content: AddPhotoForm(),
+        content: PhotoSubmitForm(photo: photo),
       );
     },
   );
