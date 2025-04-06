@@ -28,6 +28,13 @@ class SideMenu extends StatelessWidget {
                 context.mainScreenProvider.navigateToScreen('Photos');
               },
             ),
+            DrawerListTile(
+              title: "Sub Category",
+              svgSrc: "assets/icons/photos.svg",
+              press: () {
+                context.mainScreenProvider.navigateToScreen('SubCategory');
+              },
+            ),
           ],
         ),
       ),

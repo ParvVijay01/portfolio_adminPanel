@@ -3,6 +3,7 @@ import 'package:admin_panel/features/categories/data/category_provider.dart';
 import 'package:admin_panel/features/main/screen/main_screen.dart';
 import 'package:admin_panel/features/main/provider/main_screen_provider.dart';
 import 'package:admin_panel/features/photos/data/photo_provider.dart';
+import 'package:admin_panel/features/subCategory/provider/sub_category_provider.dart';
 import 'package:admin_panel/routes/app_pages.dart';
 import 'package:admin_panel/theme/color_scheme.dart';
 import 'package:admin_panel/utility/extensions.dart';
@@ -23,6 +24,8 @@ class MyApp extends StatelessWidget {
             create: (context) => PhotoProvider(context.dataProvider)),
         ChangeNotifierProvider(
             create: (context) => CategoryProvider(context.dataProvider)),
+        ChangeNotifierProvider(
+            create: (context) => SubCategoryProvider(context.dataProvider)),
       ],
       child: GetMaterialApp(
         title: 'Portfolio Admin Panel',

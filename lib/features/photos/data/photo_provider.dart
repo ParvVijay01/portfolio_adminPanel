@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:admin_panel/core/data_provider.dart';
 import 'package:admin_panel/models/api_response.dart';
 import 'package:admin_panel/models/category.dart';
@@ -26,47 +27,40 @@ class PhotoProvider extends ChangeNotifier {
 
   PhotoProvider(this._dataProvider);
 
-  addPhoto() async {
+  Future<void> addPhoto() async {
     try {
       if (selectedImage == null) {
         SnackBarHelper.showErrorSnackBar("Please select an image!");
-        return; // stop the program eviction
+        return;
       }
-      Map<String, dynamic> formDataMap = {
-        'title': photoTitleController.text,
-        'image': 'no-data', // image path will be added from the server side
-        'description': photoDescController.text,
-        'category': selectedCategory?.sId
-      };
 
-      final FormData form =
-          await createFormData(imgXFile: imgXFile, formData: formDataMap);
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('https://localhost:5000/api/photos'),
+      );
 
-      final response =
-          await service.addItem(endpointUrl: 'api/photos', itemData: form);
-      log('added photo ===> ${response.body}');
-      if (response.isOk) {
-        ApiResponse<Photo> apiResponse = ApiResponse.fromJson(
-          response.body,
-          (json) => Photo.fromJson(json as Map<String, dynamic>),
-        );
-        log("Api Response from photo ====> $apiResponse");
-        if (apiResponse.success == true) {
-          clearFields();
-          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
-          _dataProvider.getAllPhotos();
-          log("Photo added");
-        } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Failed to add photo: ${apiResponse.message}');
-        }
+      request.fields['title'] = photoTitleController.text;
+      request.fields['description'] = photoDescController.text;
+      request.fields['categoryId'] = selectedCategory?.sId ?? '';
+
+      // Convert XFile to File
+      File file = File(selectedImage!.path);
+      request.files.add(await http.MultipartFile.fromPath('file', file.path));
+
+      var response = await request.send();
+      var responseData = await response.stream.bytesToString();
+      var jsonResponse = jsonDecode(responseData);
+
+      if (response.statusCode == 201 && jsonResponse['success'] == true) {
+        clearFields();
+        SnackBarHelper.showSuccessSnackBar(jsonResponse['message']);
+        _dataProvider.getAllPhotos();
       } else {
         SnackBarHelper.showErrorSnackBar(
-            "Error ${response.body?['message'] ?? response.statusText}");
+            'Failed to add photo: ${jsonResponse['message']}');
       }
-    } catch (err) {
-      log('$err');
-      SnackBarHelper.showErrorSnackBar("An error occurred : $err");
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar("An error occurred: $e");
       rethrow;
     }
   }
@@ -75,7 +69,7 @@ class PhotoProvider extends ChangeNotifier {
     try {
       Map<String, dynamic> formDataMap = {
         'name': photoTitleController.text,
-        'image': photoForUpdate?.image ?? "",
+        'image': photoForUpdate?.file ?? "",
         'description': photoDescController.text,
         'category': selectedCategory?.sId
       };
@@ -130,7 +124,7 @@ class PhotoProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            ('Error ${response.body?['message'] ?? response.statusText}'));
+            ('Error ${response.body?['message ===> '] ?? response.statusText}'));
       }
     } catch (err) {
       log('$err');
@@ -182,6 +176,7 @@ class PhotoProvider extends ChangeNotifier {
   //? to clear text field and images after adding or update category
   clearFields() {
     photoTitleController.clear();
+    photoDescController.clear();
     selectedImage = null;
     imgXFile = null;
     photoForUpdate = null;

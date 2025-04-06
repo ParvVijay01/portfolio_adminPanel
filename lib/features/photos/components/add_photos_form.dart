@@ -40,7 +40,7 @@ class PhotoSubmitForm extends StatelessWidget {
                   return ImageCard(
                     labelText: "Image",
                     imageFile: imgProvider.selectedImage,
-                    imageUrlForUpdateImage: photo?.image,
+                    imageUrlForUpdateImage: photo?.file,
                     onTap: () {
                       imgProvider.pickImage();
                     },

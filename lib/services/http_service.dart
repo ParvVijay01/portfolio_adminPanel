@@ -50,7 +50,7 @@ class HttpService {
       return await GetConnect().delete('$baseUrl/$endpointUrl/$itemId');
     } catch (e) {
       return Response(
-          body: json.encode({'message': e.toString()}), statusCode: 500);
+          body: json.encode({'message': e}), statusCode: 500);
     }
   }
 

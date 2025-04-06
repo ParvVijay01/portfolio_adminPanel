@@ -1,7 +1,7 @@
 import 'package:admin_panel/core/data_provider.dart';
 import 'package:admin_panel/features/photos/components/add_photos_form.dart';
-import 'package:admin_panel/models/category.dart';
 import 'package:admin_panel/models/photos.dart';
+import 'package:admin_panel/utility/color_list.dart';
 import 'package:admin_panel/utility/constants.dart';
 import 'package:admin_panel/utility/extensions.dart';
 import 'package:flutter/material.dart';
@@ -82,13 +82,17 @@ class PhotoListSection extends StatelessWidget {
                   ],
                   rows: List.generate(
                     dataProvider.photos.length,
-                    (index) => photoDataRow(dataProvider.photos[index],
-                        dataProvider.categories[index], delete: () {
-                      context.photoProvider
-                          .deletePhoto(dataProvider.photos[index]);
-                    }, edit: () {
-                      showAddPhotoForm(context, null);
-                    }),
+                    (index) => photoDataRow(
+                      dataProvider.photos[index],
+                      index + 1,
+                      edit: () {
+                        showAddPhotoForm(context, dataProvider.photos[index]);
+                      },
+                      delete: () {
+                        context.subCategoryProvider.deleteSubCategory(
+                            dataProvider.subCategories[index]);
+                      },
+                    ),
                   ),
                 );
               },
@@ -100,13 +104,22 @@ class PhotoListSection extends StatelessWidget {
   }
 }
 
-DataRow photoDataRow(Photo photoInfo, Category category,
+DataRow photoDataRow(Photo photoInfo, int index,
     {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
         Row(
           children: [
+            Container(
+              height: 24,
+              width: 24,
+              decoration: BoxDecoration(
+                color: colors[index % colors.length],
+                shape: BoxShape.circle,
+              ),
+              child: Text(index.toString(), textAlign: TextAlign.center, style: TextStyle(color: Color(0xFFFBFFE4))),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Text(
@@ -127,7 +140,7 @@ DataRow photoDataRow(Photo photoInfo, Category category,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Text(
-                category.name ?? '',
+                photoInfo.category.name ?? '',
                 style: TextStyle(
                     fontSize: 15,
                     color: Color(0xFFFBFFE4),
@@ -137,20 +150,21 @@ DataRow photoDataRow(Photo photoInfo, Category category,
           ],
         ),
       ),
-      DataCell(Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-            child: Text(
-              photoInfo.description,
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFFFBFFE4),
-                  fontWeight: FontWeight.w300),
+      DataCell(
+        SizedBox(
+          width: 200, // Set a fixed width to prevent overflow
+          child: Text(
+            photoInfo.description,
+            overflow: TextOverflow.ellipsis, // Adds '...' when text is too long
+            maxLines: 2, // Limits to 2 lines
+            style: TextStyle(
+              fontSize: 15,
+              color: Color(0xFFFBFFE4),
+              fontWeight: FontWeight.w300,
             ),
           ),
-        ],
-      )),
+        ),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

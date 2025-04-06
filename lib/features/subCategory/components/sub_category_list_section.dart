@@ -1,14 +1,15 @@
 import 'package:admin_panel/core/data_provider.dart';
+import 'package:admin_panel/features/subCategory/components/add_subcategory_form.dart';
+import 'package:admin_panel/models/subcategory.dart';
 import 'package:admin_panel/utility/color_list.dart';
 import 'package:admin_panel/utility/extensions.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/constants.dart';
-import '../../../models/category.dart';
-import 'add_category_form.dart';
 
-class CategoryListSection extends StatelessWidget {
-  const CategoryListSection({
+class SubCategoryListSection extends StatelessWidget {
+  const SubCategoryListSection({
     super.key,
   });
 
@@ -33,7 +34,7 @@ class CategoryListSection extends StatelessWidget {
                   columns: [
                     DataColumn(
                       label: Text(
-                        "Category Name",
+                        "SubCategory Name",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
                           fontSize: 20,
@@ -43,7 +44,17 @@ class CategoryListSection extends StatelessWidget {
                     ),
                     DataColumn(
                       label: Text(
-                        "Description",
+                        "Category",
+                        style: TextStyle(
+                          color: Color(0xFFFBFFE4),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        "Added Date",
                         style: TextStyle(
                           color: Color(0xFFFBFFE4),
                           fontSize: 20,
@@ -73,15 +84,19 @@ class CategoryListSection extends StatelessWidget {
                     ),
                   ],
                   rows: List.generate(
-                    dataProvider.categories.length,
-                    (index) => categoryDataRow(
-                        dataProvider.categories[index], index + 1, delete: () {
-                      context.categoryProvider
-                          .deleteCategory(dataProvider.categories[index]);
-                    }, edit: () {
-                      showAddCategoryForm(
-                          context, dataProvider.categories[index]);
-                    }),
+                    dataProvider.subCategories.length,
+                    (index) => subCategoryDataRow(
+                      dataProvider.subCategories[index],
+                      index + 1,
+                      delete: () {
+                        context.subCategoryProvider.deleteSubCategory(
+                            dataProvider.subCategories[index]);
+                      },
+                      edit: () {
+                        showAddSubCategoryForm(
+                            context, dataProvider.subCategories[index]);
+                      },
+                    ),
                   ),
                 );
               },
@@ -93,7 +108,7 @@ class CategoryListSection extends StatelessWidget {
   }
 }
 
-DataRow categoryDataRow(Category CatInfo, int index,
+DataRow subCategoryDataRow(SubCategory subCatInfo, int index,
     {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
@@ -114,7 +129,7 @@ DataRow categoryDataRow(Category CatInfo, int index,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Text(
-                CatInfo.name ?? '',
+                subCatInfo.name,
                 style: TextStyle(
                   fontSize: 15,
                   color: Color(0xFFFBFFE4),
@@ -125,22 +140,22 @@ DataRow categoryDataRow(Category CatInfo, int index,
           ],
         ),
       ),
-      DataCell(
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(
-                CatInfo.description ?? '',
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFFFBFFE4),
-                    fontWeight: FontWeight.w300),
-              ),
-            ),
-          ],
+      DataCell(Text(
+        subCatInfo.category.name ?? '',
+        style: TextStyle(
+          fontSize: 15,
+          color: Color(0xFFFBFFE4),
+          fontWeight: FontWeight.w300,
         ),
-      ),
+      )),
+      DataCell(Text(
+        subCatInfo.createdAt,
+        style: TextStyle(
+          fontSize: 15,
+          color: Color(0xFFFBFFE4),
+          fontWeight: FontWeight.w300,
+        ),
+      )),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

@@ -18,4 +18,8 @@ class Category {
     data['description'] = description;
     return data;
   }
+
+  factory Category.empty() {
+    return Category(sId: '', name: 'Uncategorized');
+  }
 }

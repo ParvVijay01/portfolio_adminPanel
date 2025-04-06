@@ -141,4 +141,6 @@ class CategoryProvider extends ChangeNotifier {
     categoryDescController.clear();
     categoryForUpdate = null;
   }
+
+  
 }
